@@ -1,21 +1,4 @@
 FROM eastuni/ubuntu-ko:httpd
-
-# A few reasons for installing distribution-provided OpenJDK:
-#
-#  1. Oracle.  Licensing prevents us from redistributing the official JDK.
-#
-#  2. Compiling OpenJDK also requires the JDK to be installed, and it gets
-#     really hairy.
-#
-#     For some sample build times, see Debian's buildd logs:
-#       https://buildd.debian.org/status/logs.php?pkg=openjdk-8
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		bzip2 \
-		unzip \
-		xz-utils \
-	&& rm -rf /var/lib/apt/lists/*
-
 # add a simple script that can auto-detect the appropriate JAVA_HOME value
 # based on whether the JDK or only the JRE is installed
 RUN { \
@@ -46,8 +29,8 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
-		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
+		openjdk-8-jdk \
+		ca-certificates-java \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
