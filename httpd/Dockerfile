@@ -11,7 +11,8 @@ ENV APACHE_SERVER_NAME localhost
 RUN apt-get update \
  && apt-get install -y \
     apache2 \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && a2enmod proxy && a2enmod proxy_http																
 
 # Expose Apache
 EXPOSE 80
