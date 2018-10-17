@@ -1,4 +1,4 @@
-FROM eastuni/ubuntu-ko:httpd
+FROM eastuni/ubuntu-ko:httpd-16.04
 
 RUN apt-get update && apt-get install -y \
     subversion \

@@ -1,4 +1,4 @@
-FROM eastuni/ubuntu-ko:18.04
+FROM eastuni/ubuntu-ko:16.04
 
 # Apache ENVs
 ENV APACHE_RUN_USER www-data
