@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
     subversion \
     libapache2-mod-svn 
 RUN apt-get install -y --no-install-recommends \
-    openjdk-8-jre \
+    openjdk-8-jdk\
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*\
 
