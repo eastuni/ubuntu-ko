@@ -3,10 +3,9 @@ FROM eastuni/ubuntu-ko:httpd
 RUN apt-get update && apt-get install -y \
     subversion \
     libapache2-mod-svn 
-RUN apt-get install -y --no-install-recommends \
-    openjdk-8-jdk\
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*\
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod dav_svn
 RUN a2enmod auth_digest

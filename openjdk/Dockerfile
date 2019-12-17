@@ -1,45 +1,19 @@
-FROM eastuni/ubuntu-ko:httpd
-# add a simple script that can auto-detect the appropriate JAVA_HOME value
-# based on whether the JDK or only the JRE is installed
-RUN { \
-		echo '#!/bin/sh'; \
-		echo 'set -e'; \
-		echo; \
-		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
-	} > /usr/local/bin/docker-java-home \
-	&& chmod +x /usr/local/bin/docker-java-home
+FROM openjdk:8-jdk-slim
 
-# do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
-RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
-ENV JAVA_HOME /docker-java-home
+ENV TZ 'Asia/Seoul'
 
-ENV JAVA_VERSION 8u181
-ENV JAVA_DEBIAN_VERSION 8u181-b13-1~deb9u1
+RUN echo $TZ > /etc/timezone && \
+apt-get update && apt-get install -y locales && \
+rm /etc/localtime && \
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+sed -i 's/^# *\(ko_KR.UTF-8\)/\1/' /etc/locale.gen && \
+locale-gen && \
+apt-get clean
 
-# see https://bugs.debian.org/775775
-# and https://github.com/docker-library/java/issues/19#issuecomment-70546872
-ENV CA_CERTIFICATES_JAVA_VERSION 20170531+nmu1
+# set locale ko_KR
+RUN locale-gen ko_KR.UTF-8
+ENV LANG ko_KR.UTF-8
+ENV LANGUAGE ko_KR.UTF-8
+ENV LC_ALL ko_KR.UTF-8
 
-RUN set -ex; \
-	\
-# deal with slim variants not having man page directories (which causes "update-alternatives" to fail)
-	if [ ! -d /usr/share/man/man1 ]; then \
-		mkdir -p /usr/share/man/man1; \
-	fi; \
-	\
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		openjdk-8-jdk \
-		ca-certificates-java \
-	; \
-	rm -rf /var/lib/apt/lists/*; \
-	\
-# verify that "docker-java-home" returns what we expect
-	[ "$(readlink -f "$JAVA_HOME")" = "$(docker-java-home)" ]; 
-# see CA_CERTIFICATES_JAVA_VERSION notes above
-RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
-
-# If you're reading this and have any feedback on how this image could be
-# improved, please open an issue or a pull request so we can discuss it!
-#
-#   https://github.com/docker-library/openjdk/issues
+CMD /bin/bash

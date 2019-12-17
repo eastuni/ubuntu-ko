@@ -1,1 +1,1 @@
-docker build --tag localhost:5000/ubuntu-ko:openjdk .
+docker build --tag eastuni/openjdk-ko --tag eastuni/openjdk-8-ko .
